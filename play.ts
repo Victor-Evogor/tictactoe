@@ -4,8 +4,10 @@ import {createInterface} from "readline"
 import { formatBoard, formatUserInput } from "./utils/format";
 import insertMove from "./utils/insertMove";
 import { gameWon, gameDrawn } from "./utils/endState";
+import { cursor } from "./index"
+import dumbo from "./ai/dumbo";
 
-const board:Board = [null,null,null,null,null,null,null,null,null]
+let board:Board = [null,null,null,null,null,null,null,null,null]
 
 let hu: number = 0
 let ai:number = 1
@@ -13,13 +15,19 @@ let ai:number = 1
 const rl = createInterface( readStream, process.stdout);
 
 const promptUserInput = (message: string)=>{
-    rl.question("Your turn\n > ", move =>{
+    rl.question(message, move =>{
         try {
             let playerMove = formatUserInput(move);
+            console.clear();
+            board = insertMove(playerMove as number[], hu, board);
+            console.log(formatBoard(board));
+            console.log("Now its my turn, hold on a bit\nThinking...");
+            const cMove = computerPlay();
+            board = insertMove(cMove as number[], ai, board);
+            // check win
             console.clear()
-            console.log(formatBoard(insertMove(playerMove as number[], hu, board)));
-            console.log("Now its my turn, hold on a bit\nThinking...")
-
+            console.log(formatBoard(board));
+            promptUserInput("Your Turn \n > ")
         } catch (error:any) {
             console.log(error.message);
             promptUserInput("Try again")
@@ -50,10 +58,12 @@ function minmax(player:number, move:Array<number>, board:Board){
 
 }
 
-function computerPlay(difficulty:number){
-    /* return new Promise((resolve, reject)=>{
-        resolve(minmax(ai, board ))
-    }) */
+function computerPlay(){
+    if(cursor.difficulty === 0){
+        return dumbo(board, hu);
+    }
 }
+
+
 
 export default play

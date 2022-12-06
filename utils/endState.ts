@@ -11,10 +11,25 @@ const winningCombos = [
     [2,4,6]
 ]
 
-export function gameWon(board:Board, player:number): boolean{
-    return !!winningCombos.find(combo =>{
-        combo.every(position => combo[position] === board[position])
-    })
+export function gameEnd(board:Board): 0|1|"draw"|null{
+
+    let isZeroWin = !!winningCombos.find(combo =>{
+        return combo.every(position => 0 === board[position])
+    });
+    let isOneWin = !!winningCombos.find(combo =>{
+        return combo.every(position => 1 === board[position])
+    });
+
+    let isDraw = !board.includes(null)
+    if(isOneWin){
+        return 1
+    }else if(isZeroWin){
+        return 0
+    }else if(isDraw){
+        return "draw"
+    }else{
+        return null
+    }
 }
 
 export function gameDrawn(board:Board): boolean {

@@ -4,7 +4,7 @@ import play from "./play"
 import { navigationInput, close } from "./utils/input";
 import { about, mainMenu, selectPlayer, setDifficulty } from "./utils/display";
 
-const cursor:{
+export const cursor:{
     main: number,
     selectPlayer: number,
     difficulty: number
@@ -80,23 +80,21 @@ navigationInput(
       }
     } else if (position === Positions.SETDIFFICULTY) {
         if (result === "down") {
-          cursor.difficulty = ++cursor.difficulty % 4;
+          cursor.difficulty = ++cursor.difficulty % 2;
           console.clear();
           setDifficulty(cursor.difficulty);
         } else if (result === "up") {
           if (cursor.difficulty === 0) {
-            cursor.difficulty = 3;
+            cursor.difficulty = 1;
           } else {
             cursor.difficulty = --cursor.difficulty;
           }
           console.clear();
           setDifficulty(cursor.difficulty);
         } else if (result === "enter") {
-          if (cursor.difficulty === 0) {
-          } else if (cursor.difficulty === 1) {
-            position = Positions.PLAY;
-            console.clear();
-          }
+          console.clear();
+          mainMenu(cursor.main);
+          position = Positions.MAIN;
         }
       }
   },

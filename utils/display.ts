@@ -63,7 +63,7 @@ export function selectPlayer(cursor:number) {
 export function setDifficulty(cursor:number) {
     Header();
     console.log(colors.bold("Select your level of difficulty\n"))
-    const options = ["Easy", "Medium", "Hard", "Unbeatable"].map((item, index) => {
+    const options = ["Easy", "unbeatable"].map((item, index) => {
         return colors[index === cursor ? "green" : "grey"](
           `${index === cursor ? "> " : "  "} ${item}`
         );

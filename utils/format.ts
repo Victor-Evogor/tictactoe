@@ -5,9 +5,9 @@ export function formatBoard(input: Board):string{
     let r :Array<string>= [];
     input.forEach(square=>{
         if(square === 0){
-            r.push(colors.red("O"));
+            r.push(colors.blue("X"));
         }else if( square === 1){
-            r.push(colors.blue("X"))
+            r.push(colors.red("O"))
         }else{
             r.push(" ")
         }
