@@ -11,7 +11,7 @@ export const cursor:{
 } = {
   main: 0,
   selectPlayer: 0,
-  difficulty: 0
+  difficulty: 1
 };
 enum Positions {
   MAIN,
@@ -76,7 +76,7 @@ navigationInput(
       } else if (result === "enter") {
         position = Positions.PLAY;
         console.clear();
-        play(cursor.selectPlayer, cursor.difficulty);
+        play(cursor.selectPlayer);
       }
     } else if (position === Positions.SETDIFFICULTY) {
         if (result === "down") {

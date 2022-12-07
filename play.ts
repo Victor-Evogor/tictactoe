@@ -1,69 +1,90 @@
+import colors from "colors";
 import Board from "./types/board";
 import { readStream } from "./utils/input";
-import {createInterface} from "readline"
+import { createInterface } from "readline";
 import { formatBoard, formatUserInput } from "./utils/format";
 import insertMove from "./utils/insertMove";
-import { gameWon, gameDrawn } from "./utils/endState";
-import { cursor } from "./index"
+import { gameEnd, gameDrawn } from "./utils/endState";
+import { cursor } from "./index";
 import dumbo from "./ai/dumbo";
+import unbeatable from "./ai/minmax";
 
-let board:Board = [null,null,null,null,null,null,null,null,null]
+let board: Board = [null, null, null, null, null, null, null, null, null];
 
-let hu: number = 0
-let ai:number = 1
+export let hu: number = 0;
+export let ai: number = 1;
 
-const rl = createInterface( readStream, process.stdout);
+const rl = createInterface(readStream, process.stdout);
 
-const promptUserInput = (message: string)=>{
-    rl.question(message, move =>{
-        try {
-            let playerMove = formatUserInput(move);
-            console.clear();
-            board = insertMove(playerMove as number[], hu, board);
-            console.log(formatBoard(board));
-            console.log("Now its my turn, hold on a bit\nThinking...");
-            const cMove = computerPlay();
-            board = insertMove(cMove as number[], ai, board);
-            // check win
-            console.clear()
-            console.log(formatBoard(board));
-            promptUserInput("Your Turn \n > ")
-        } catch (error:any) {
-            console.log(error.message);
-            promptUserInput("Try again")
-        }
-    })
+const promptUserInput = (message: string) => {
+  rl.question(message, (move) => {
+    try {
+      let playerMove = formatUserInput(move);
+      board = insertMove(playerMove as number[], hu, board);
+      console.clear();
+      // check if game has ended
+      console.log(formatBoard(board));
+      if (gameEnd(board) === hu) {
+        console.log(colors.green("You Win :)"));
+      } else if (gameEnd(board) === ai) {
+        console.log(colors.red("You lose :("));
+      } else if (gameEnd(board) === "draw") {
+        console.log(colors.blue("Its a tie :/"));
+      }
+      if (gameEnd(board) !== null) {
+        return;
+      }
+      console.log("Now its my turn, hold on a bit\nThinking...");
+      // returns a move from comp
+      const cMove = computerPlay();
+      board = insertMove(cMove as number[], ai, board);
+      console.clear();
+      console.log(formatBoard(board));
+      // check if game has ended
+      if (gameEnd(board) === hu) {
+        console.log("You Win :)");
+      } else if (gameEnd(board) === ai) {
+        console.log("You lose :(");
+      } else if (gameEnd(board) === "draw") {
+        console.log("Its a tie :/");
+      }
+      if (gameEnd(board) !== null) {
+        console.log("\n Press 'm' to go back to main menu")
+        return;
+      }
+      promptUserInput("Your Turn \n > ");
+    } catch (error: any) {
+      console.log(colors.red(error.message));
+      promptUserInput("Try again!\n > ");
+    }
+  });
+};
+
+function play(selectedPlayer: number) {
+    board = [null, null, null, null, null, null, null, null, null];
+  hu = selectedPlayer;
+  ai = 1-selectedPlayer;
+  console.log(formatBoard(board));
+
+
+  if (hu === 0) {
+    promptUserInput("Your turn > \n");
+  }else{
+    console.log("Hold on, let me make the first move")
+    const cMove = computerPlay();
+    board = insertMove(cMove as number[], ai, board);
+    console.clear();
+    console.log(formatBoard(board))
+    promptUserInput("I have played, now it's your tun!/n > ");
+  }
 }
 
-function play(selectedPlayer:number, difficulty:number=0) {
-    hu = selectedPlayer;
-    ai = ++selectedPlayer % 2;
-    console.log( formatBoard(board));
-
-    if(hu === 0){
-        promptUserInput("Your turn > \n")
-    }
+function computerPlay() {
+  if (cursor.difficulty === 0) {
+    return dumbo(board, hu);
+  }else{
+    return unbeatable(board, ai)
+  }
 }
 
-function minmax(player:number, move:Array<number>, board:Board){
-
-    if(gameWon(board, player) && player == ai){
-        return -Infinity
-    }
-    if(gameWon(board, player) && player == hu){
-        return Infinity
-    }else if(gameDrawn(board)){
-        return 0;
-    }
-
-}
-
-function computerPlay(){
-    if(cursor.difficulty === 0){
-        return dumbo(board, hu);
-    }
-}
-
-
-
-export default play
+export default play;

@@ -16,6 +16,7 @@ function Header() {
 export function mainMenu(cursor: number) {
   Header()
 
+  // formats the options
   const options = ["Play", "About", "Set Difficulty"].map((item, index) => {
     return colors[index === cursor ? "green" : "grey"](
       `${index === cursor ? "> " : "  "} ${item}`
@@ -28,8 +29,6 @@ export function about(){
     Header()
 
     console.log(colors.green(`@2022 Victor Evogor\n`));
-    console.log(colors.yellow(`This software can be  copied, modified and distributed provided the license, trademark and author
-remains unmodified\n\n`));
     console.log(colors.black(colors.bgWhite(`
                                                           
                    NAVIGATION                             
@@ -40,12 +39,24 @@ remains unmodified\n\n`));
                                                           
 `)))
 console.log(colors.bold(`
-         TIC TAC TOE RULES
+         TIC TAC TOE RULES & GAME PLAY
  -----------------------------------------------------------------------------
  The game is played on a 9x9 grid, with each player assigned a letter, X or O.
  The first player to get three in a row, column or diagonally wins!
  If the grid runs out of spaces, its a draw!
+
+ To fill in a cell, type in the row number followed by the column number.
+ 1,1 | 1,2 | 1,3
+ ----+-----+----
+ 2,1 | 2,2 | 2,3
+ ----+-----+----
+ 3,1 | 3,2 | 3,3
+ for example, if you type in "1,3" you will fill in the top left cell.
+
+ You can also set the difficulty in home > difficulty
 `))
+
+
     console.log("\n\n Press m to return to main menu\n CTRL+C to exit")
 }
 

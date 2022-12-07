@@ -30,4 +30,24 @@ describe("Utilities tests", () => {
     const r = gameEnd(board);
     expect(r).toEqual(1);
   });
+
+  it("Checks if game is lost by 1", ()=>{
+    const board:Board = [
+      0,  0,  0,
+      null, 1, 1,
+      null, 1, 1
+  ]
+  const r = gameEnd(board);
+  expect(r).toEqual(0);
+  });
+
+  it("Checks if game is lost drawn", ()=>{
+    const board:Board = [
+      0, 0, 1,
+      1, 1, 0,
+      0, 1, 1
+  ]
+  const r = gameEnd(board);
+  expect(r).toEqual("draw");
+  });
 });
