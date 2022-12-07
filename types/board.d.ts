@@ -1,3 +1,3 @@
-type Square = 1 | 0 | null;
+import Square from "./square"
 type Board = [Square, Square, Square, Square, Square, Square, Square, Square, Square];
 export default Board

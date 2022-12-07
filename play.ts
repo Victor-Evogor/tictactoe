@@ -4,10 +4,11 @@ import { readStream } from "./utils/input";
 import { createInterface } from "readline";
 import { formatBoard, formatUserInput } from "./utils/format";
 import insertMove from "./utils/insertMove";
-import { gameEnd, gameDrawn } from "./utils/endState";
+import { gameEnd } from "./utils/endState";
 import { cursor } from "./index";
 import dumbo from "./ai/dumbo";
-import unbeatable from "./ai/minmax";
+import unbeatable from "./ai/unbeatable";
+import Move from "./types/move";
 
 let board: Board = [null, null, null, null, null, null, null, null, null];
 
@@ -20,14 +21,14 @@ const promptUserInput = (message: string) => {
   rl.question(message, (move) => {
     try {
       let playerMove = formatUserInput(move);
-      board = insertMove(playerMove as number[], hu, board);
+      board = insertMove(playerMove as Move, hu, board);
       console.clear();
       // check if game has ended
       console.log(formatBoard(board));
       if (gameEnd(board) === hu) {
         console.log(colors.green("You Win :)"));
       } else if (gameEnd(board) === ai) {
-        console.log(colors.red("You lose :("));
+        console.log(colors.bgRed(colors.white("You lose :(")));
       } else if (gameEnd(board) === "draw") {
         console.log(colors.blue("Its a tie :/"));
       }
@@ -37,7 +38,7 @@ const promptUserInput = (message: string) => {
       console.log("Now its my turn, hold on a bit\nThinking...");
       // returns a move from comp
       const cMove = computerPlay();
-      board = insertMove(cMove as number[], ai, board);
+      board = insertMove(cMove, ai, board);
       console.clear();
       console.log(formatBoard(board));
       // check if game has ended
@@ -72,18 +73,18 @@ function play(selectedPlayer: number) {
   }else{
     console.log("Hold on, let me make the first move")
     const cMove = computerPlay();
-    board = insertMove(cMove as number[], ai, board);
+    board = insertMove(cMove, ai, board);
     console.clear();
     console.log(formatBoard(board))
     promptUserInput("I have played, now it's your tun!/n > ");
   }
 }
 
-function computerPlay() {
+function computerPlay():Move {
   if (cursor.difficulty === 0) {
-    return dumbo(board, hu);
+    return dumbo(board);
   }else{
-    return unbeatable(board, ai)
+    return unbeatable(board)
   }
 }
 

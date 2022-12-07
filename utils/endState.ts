@@ -31,7 +31,3 @@ export function gameEnd(board:Board): 0|1|"draw"|null{
         return null
     }
 }
-
-export function gameDrawn(board:Board): boolean {
-    return !!board.includes(null)
-}

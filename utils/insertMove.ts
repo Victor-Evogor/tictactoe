@@ -1,12 +1,12 @@
 import Board from "../types/board";
+import Move from "../types/move";
 
-function insertMove(array:Array<number>,player: number, board: Board): Board {
+function insertMove(move:Move,player: number, board: Board): Board {
     const cloneBoard = JSON.parse(JSON.stringify(board));
-    const moveIndex = array[0]*3 + array[1];
+    const moveIndex = move[0]*3 + move[1];
     const square = cloneBoard[moveIndex];
     if(square !== null){
         throw new Error("That cell is occupied");
-        
     }
     cloneBoard[moveIndex] = player;
     return cloneBoard;

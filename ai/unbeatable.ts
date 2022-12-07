@@ -4,19 +4,19 @@ import insertMove from "../utils/insertMove";
 import { gameEnd } from "../utils/endState";
 import { hu, ai } from "../play";
 import random from "../utils/random";
+import Move from "../types/move";
 
 type result = {
   score: number;
   index?: number;
 };
 
-function clone(object: object): any {
+function clone<T>(object: T): T {
   return JSON.parse(JSON.stringify(object));
 }
 
-function unBeatable(board: Board, player: number) {
+function unBeatable(board: Board):Move {
   function minmax(board: Board, player: number): result {
-    // console.log(formatBoard(board));
     let moves = availableMoves(board);
 
     // Checking if game is over
@@ -45,28 +45,22 @@ function unBeatable(board: Board, player: number) {
 
     // Minimizing human's move & maximizing ai's move to get the best outcome
     let bestResult: result | undefined;
-    if (player === ai)
+    if (player === ai) // maximizing
       bestResult = movesResult.reduce(
         (prev, current) => {
           if (current.score > prev.score) {
             return current;
-          } else if ((current.score = prev.score)) {
-            if (random(0, 1) === 1) return current;
-            else return prev;
           } else {
             return prev;
           }
         },
         { score: -Infinity, index: 0 }
       );
-    else
+    else // minimizing
       bestResult = movesResult.reduce(
         (prev, current) => {
           if (current.score < prev.score) {
             return current;
-          }else if ((current.score = prev.score)) {
-            if (random(0, 1) === 1) return current;
-            else return prev;
           } else {
             return prev;
           }
@@ -74,9 +68,9 @@ function unBeatable(board: Board, player: number) {
         { score: Infinity, index: 0 }
       );
 
-    // returning best move result
+    // returning the best move result
     return bestResult;
   }
-  return availableMoves(board)[minmax(board, player).index!];
+  return availableMoves(board)[minmax(board, ai).index!] as Move;
 }
 export default unBeatable;

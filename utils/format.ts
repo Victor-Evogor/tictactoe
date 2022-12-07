@@ -1,5 +1,6 @@
 import Board from "../types/board";
 import colors from "colors"
+import Move from "../types/move";
 
 export function formatBoard(input: Board):string{
     let r :Array<string>= [];
@@ -16,8 +17,8 @@ export function formatBoard(input: Board):string{
     return board
 }
 
-export function formatUserInput(input:string){
-    let arr: Array<string | number> = input.split(",");
+export function formatUserInput(input:string): Move{
+    let arr: any[] = input.split(",");
     arr = arr.map(point => Number(point));
     if(arr.length !== 2){
         throw new Error("Please specify only two values separated by a ','\n Example 1,3");
@@ -36,5 +37,5 @@ export function formatUserInput(input:string){
     arr = arr.map((point)=>{
         return --(point as number)
     });
-    return arr;
+    return arr as Move;
 }
