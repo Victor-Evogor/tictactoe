@@ -76,7 +76,7 @@ function play(selectedPlayer: number) {
     board = insertMove(cMove, ai, board);
     console.clear();
     console.log(formatBoard(board))
-    promptUserInput("I have played, now it's your tun!/n > ");
+    promptUserInput("I have played, now it's your tun!\n > ");
   }
 }
 
